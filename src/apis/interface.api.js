@@ -25,8 +25,18 @@ export const _getRules = (sid) => {
 export const _deleteRule = (sid, id) => {
   return axiosService.delete(`${API_ENDPOINT}/${url_interface}/${sid}/rules/${id}`);
 };
-export const _createRule = (sid, rule) => {
-  return axiosService.post(`${API_ENDPOINT}/${url_interface}/${sid}/rules`, { rules: rule });
+
+export const _createRule = (sid, rules) => {
+  return axiosService.post(
+    `${API_ENDPOINT}/${url_interface}/${sid}/rules`,
+    { rules: rules },
+    {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    },
+  );
+
 };
 export const _updateRule = (rule, ruleEditing) => {
   return axiosService.put(`${API_ENDPOINT}/${url_interface}/${ruleEditing.sid}/rules/${ruleEditing.id}`, {

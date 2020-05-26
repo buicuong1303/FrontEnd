@@ -145,10 +145,10 @@ function* deleteRuleSaga({ payload }) {
   yield put(allAction.uiActions.hideLoading());
 }
 function* createRuleSaga({ payload }) {
-  const { sid, rule } = payload;
-  console.log(sid, rule);
+  const { sid, rules } = payload;
+
   yield put(allAction.uiActions.showLoading());
-  const res = yield call(_createRule, sid, rule);
+  const res = yield call(_createRule, sid, rules);
   const { status, data: dataRes } = res;
   if (status === STATUS_CODE.CREATE) {
     yield put(allAction.ruleActions.createRuleSuccess(dataRes.data));
@@ -172,6 +172,45 @@ function* updateRuleSaga({ payload }) {
   yield delay(1000);
   yield put(allAction.uiActions.hideLoading());
 }
+
+function* loginWithFacebookSaga({ payload }) {
+  const { data, history, from } = payload;
+
+  const res = yield call(_loginWithFacebook, data);
+  const { status, data: dataRes, headers } = res;
+
+  if (status === STATUS_CODE.SUCCESS) {
+    yield call(setToken, headers['authorization']);
+    history.push(from);
+  }
+  console.log(res.data);
+}
+
+function* loginSaga({ payload }) {
+  try {
+    const { data, history, from } = payload;
+    const res = yield call(_login, data);
+    const { status, data: dataRes, headers } = res;
+    if (status === STATUS_CODE.SUCCESS) {
+      yield call(setToken, headers['authorization']);
+      yield put(allAction.authActions.loginSuccess());
+      history.push(from);
+    }
+  } catch (error) {
+    yield put(allAction.authActions.loginFail(error.message));
+  }
+}
+function* registerSaga({ payload }) {
+  const { data, history } = payload;
+  const res = yield call(_register, data);
+  console.log({ res });
+  const { status, data: dataRes } = res;
+  if (status === STATUS_CODE.CREATE) {
+    console.log('register success');
+    history.push('/login');
+  }
+}
+
 function* rootSaga() {
   yield takeLatest(types.GET_EVENTS, getEventsSaga);
   yield takeLatest(types.GET_DETAIL_EVENT, getDetailEventSaga);

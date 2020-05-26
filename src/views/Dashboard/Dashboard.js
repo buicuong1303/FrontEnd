@@ -27,6 +27,7 @@ import DoughnutChart from 'components/ChartDonut/ChartDonut';
 import styles from 'assets/jss/material-dashboard-react/views/dashboardStyle.js';
 import cn from 'classnames';
 import InfoPriority from 'components/InfoPriority/InfoPriority';
+import LineChart from 'components/LineChart/LineChart';
 import { useSelector, useDispatch } from 'react-redux';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -43,11 +44,7 @@ import { SOCKET_ENDPOINT } from '../../constants/index';
 import allActions from '../../actions';
 import io from 'socket.io-client';
 var isOnSite = true;
-
-
-
 const socket = io(`${SOCKET_ENDPOINT}` + '/webapp');
-
 const useStyles = makeStyles({
   ctChart: {
     backgroundColor: '#3bc0c3',
